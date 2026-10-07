@@ -1,20 +1,20 @@
 package frc.robot.subsystem.torret;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Controller {
 
     CommandXboxController xbox1 = new CommandXboxController(0);
 
-    Trigger botaoShooter = xbox1.a();
+    double botaoShooter = xbox1.getRightTriggerAxis();
 
     double Velocidade_torreta() {
-        return xbox1.getLeftX();
+        return MathUtil.applyDeadband(xbox1.getLeftX(), 0.2);
     }
 
-    boolean Velocidade_shooter() {
-        return botaoShooter.getAsBoolean();
+    double Velocidade_shooter() {
+        return MathUtil.applyDeadband(xbox1.getRightTriggerAxis(), 0.1);
     }
 
 }

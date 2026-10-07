@@ -23,34 +23,24 @@ public class Torret {
     private final SparkMaxConfig torret_config = new SparkMaxConfig();
 
     public Torret() {
-        shooter_config.smartCurrentLimit(40).idleMode(IdleMode.kCoast).inverted(false);
+        shooter_config.smartCurrentLimit(40).idleMode(IdleMode.kCoast).inverted(false).voltageCompensation(12);
         torret_config.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
 
         shooter_encoder = motor_shooter.getEncoder();
         encoder_torret = motor_torret.getEncoder();
+
+        torret_config.softLimit.reverseSoftLimit(0.1).reverseSoftLimitEnabled(true).forwardSoftLimit(6).forwardSoftLimitEnabled(true);
 
         motor_torret.configure(torret_config, ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
         motor_shooter.configure(shooter_config,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
-    double angulo_por_seg() {
-        return encoder_torret.getPosition();
-    }
-
     public void control() {
-        double speed_torreta = controle.Velocidade_torreta() * 0.3;
+        double speed_torreta = (controle.Velocidade_torreta() * 0.05);
         motor_torret.set(speed_torreta);
-        System.out.println(encoder_torret.getPosition());
 
-        if(controle.Velocidade_shooter() == true) {
-            motor_shooter.set(0.40);
-        } else {
-            motor_shooter.set(0);
-        }
-    //boolean a = (controle.Velocidade_shooter == true) ? motor_shooter.set(0.4) : motor_shooter.set(0);
+        double speed_shooter = (controle.Velocidade_shooter());
+        motor_shooter.set(speed_shooter);
     }
-
-
-
 }
