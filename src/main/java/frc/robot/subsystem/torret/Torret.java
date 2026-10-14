@@ -4,6 +4,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.units.measure.LinearVelocity;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
@@ -11,10 +14,13 @@ import com.revrobotics.PersistMode;
 
 public class Torret {
 
+    double tolerancia = 1.5;
+
     RelativeEncoder shooter_encoder;
     RelativeEncoder encoder_torret;
 
     Controller controle = new Controller();
+    slimelight limelight = new slimelight();
 
     private final SparkMax motor_shooter = new SparkMax(1, MotorType.kBrushless);
     private final SparkMax motor_torret = new SparkMax(2, MotorType.kBrushless);
@@ -37,10 +43,15 @@ public class Torret {
     }
 
     public void control() {
-        double speed_torreta = (controle.Velocidade_torreta() * 0.05);
-        motor_torret.set(speed_torreta);
-
         double speed_shooter = (controle.Velocidade_shooter());
         motor_shooter.set(speed_shooter);
+        
+        if (controle.botaoA()) {
+            double velocidade_correcao = limelight.SeguirApril();
+            motor_torret.set(velocidade_correcao);
+        }else {
+            double speed_torreta = (controle.Velocidade_torreta() * 0.05);
+            motor_torret.set(speed_torreta);
+        }
     }
 }
