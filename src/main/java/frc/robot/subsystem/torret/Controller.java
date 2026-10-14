@@ -1,12 +1,11 @@
 package frc.robot.subsystem.torret;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class Controller {
 
-    CommandXboxController xbox1 = new CommandXboxController(0); 
+    private final CommandXboxController xbox1 = new CommandXboxController(0); 
 
     double Velocidade_torreta() {
         return MathUtil.applyDeadband(xbox1.getLeftX(), 0.2);

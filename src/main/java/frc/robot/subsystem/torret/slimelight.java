@@ -1,23 +1,33 @@
 package frc.robot.subsystem.torret;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class slimelight {
 
-private double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
-private double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight");
 
     private final double kp = 0.01;
+    private final double tolerancia = 0.15;
+    private final double velocidade_max = 0.45;
 
     public double SeguirApril() {
-        final double erro = 0 - tx;
+        double tx = tabela.getEntry("tx").getDouble(0);
+        double tv = tabela.getEntry("tv").getDouble(0);
+
+        final double erro = -tx;
         final double correcao = kp * erro;
-        final double velocidade = Math.tanh(correcao);
-        
-        if(tv == 0.0)  {
+
+        if (tv == 0.0) {
             return 0.0;
-        }else {
-        return velocidade;
         }
+
+        if(Math.abs(erro) < tolerancia) {
+            return 0.0;
+        }
+
+        return MathUtil.clamp(correcao, -velocidade_max, velocidade_max);
+        
     }
 }

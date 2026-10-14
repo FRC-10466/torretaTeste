@@ -5,8 +5,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
-import edu.wpi.first.units.measure.LinearVelocity;
-
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
@@ -50,7 +48,7 @@ public class Torret {
             double velocidade_correcao = limelight.SeguirApril();
             motor_torret.set(velocidade_correcao);
         }else {
-            double speed_torreta = (controle.Velocidade_torreta() * 0.05);
+            double speed_torreta = (controle.Velocidade_torreta() * 0.08);
             motor_torret.set(speed_torreta);
         }
     }
