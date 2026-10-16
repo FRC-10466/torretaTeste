@@ -3,6 +3,9 @@ package frc.robot.subsystem.torret;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import com.revrobotics.RelativeEncoder;
@@ -28,7 +31,7 @@ public class Torret {
 
     public Torret() {
         shooter_config.smartCurrentLimit(40).idleMode(IdleMode.kCoast).inverted(false).voltageCompensation(12);
-        torret_config.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false);
+        torret_config.smartCurrentLimit(40).idleMode(IdleMode.kBrake).inverted(false).voltageCompensation(12);
 
         shooter_encoder = motor_shooter.getEncoder();
         encoder_torret = motor_torret.getEncoder();
@@ -40,11 +43,21 @@ public class Torret {
 
     }
 
+    public void resetar() {
+        controle.resetar();
+    }
+
     public void control() {
         double speed_shooter = (controle.Velocidade_shooter());
         motor_shooter.set(speed_shooter);
+
+        SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
+        SmartDashboard.putNumber("tx", limelight.valor_tx());
+        SmartDashboard.putBoolean("auto ligado", controle.ligado);
+        SmartDashboard.putNumber("saida torreta", motor_torret.get());
+        SmartDashboard.putNumber("posicao torreta", encoder_torret.getPosition());
         
-        if (controle.botaoA()) {
+        if (controle.botaoA() && limelight.temAlvo()) {
             double velocidade_correcao = limelight.SeguirApril();
             motor_torret.set(velocidade_correcao);
         }else {
