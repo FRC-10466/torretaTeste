@@ -15,16 +15,14 @@ import com.revrobotics.PersistMode;
 
 public class Torret {
 
-    double tolerancia = 1.5;
-
     RelativeEncoder shooter_encoder;
     RelativeEncoder encoder_torret;
 
     Controller controle = new Controller();
     slimelight limelight = new slimelight();
 
-    private final SparkMax motor_shooter = new SparkMax(1, MotorType.kBrushless);
-    private final SparkMax motor_torret = new SparkMax(2, MotorType.kBrushless);
+    private final SparkMax motor_shooter = new SparkMax(6, MotorType.kBrushless);
+    private final SparkMax motor_torret = new SparkMax(7, MotorType.kBrushless);
 
     private final SparkMaxConfig shooter_config = new SparkMaxConfig();
     private final SparkMaxConfig torret_config = new SparkMaxConfig();
