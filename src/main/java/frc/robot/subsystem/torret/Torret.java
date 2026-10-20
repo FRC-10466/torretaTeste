@@ -18,7 +18,7 @@ public class Torret {
     RelativeEncoder shooter_encoder;
     RelativeEncoder encoder_torret;
 
-    Controller controle = new Controller();
+    controller controle = new controller();
     slimelight limelight = new slimelight();
 
     private final SparkMax motor_shooter = new SparkMax(6, MotorType.kBrushless);
@@ -46,14 +46,13 @@ public class Torret {
     }
 
     public void control() {
+        SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
+        SmartDashboard.putBoolean("auto ligado", controle.ligado);
+        SmartDashboard.putNumber("ty", limelight.valor_ty());
+        SmartDashboard.putNumber("tx", limelight.valor_tx());
+        
         double speed_shooter = (controle.Velocidade_shooter());
         motor_shooter.set(speed_shooter);
-
-        SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
-        SmartDashboard.putNumber("tx", limelight.valor_tx());
-        SmartDashboard.putBoolean("auto ligado", controle.ligado);
-        SmartDashboard.putNumber("saida torreta", motor_torret.get());
-        SmartDashboard.putNumber("posicao torreta", encoder_torret.getPosition());
         
         if (controle.botaoA() && limelight.temAlvo()) {
             double velocidade_correcao = limelight.SeguirApril();

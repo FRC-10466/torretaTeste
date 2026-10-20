@@ -8,10 +8,15 @@ public class slimelight {
 
 private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight-back");
 
-    private final double kp = 0.001;
-    private final double ks = 0.02;
-    private final double tolerancia = 2;
-    private final double velocidade_max = 0.45;
+private final double kp = 0.001;
+private final double ks = 0.03;
+private final double tolerancia = 2;
+private final double velocidade_max = 0.45;
+
+
+    public double valor_ty() {
+        return tabela.getEntry("ty").getDouble(0);
+    }
 
     public double valor_tx() {
         return tabela.getEntry("tx").getDouble(0);
