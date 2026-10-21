@@ -2,11 +2,10 @@ package frc.robot.subsystem.torret;
 
 public class torretContantes {
 
-    public static final double ALTURA_APRITAG = 1;
-    public static final double ALTURA_CAMERA = 2;
-    public static final double ANGULO_CAMERA = 3;
+    public final double ALTURA_APRITAG = 1;//centra do qrcode
+    public final double ALTURA_CAMERA = 2;//altura da limelight
+    public final double ANGULO_CAMERA = 3;//inclinação da limeliht
+    public final double AJUSTE_DISTANCIA = 4;// diferença da limeliht com o shooter e da apriltag com o caixote
     
-    public static final double ALTURA_ALVO = 4;
-    public static final double ANGULO_SAIDA = 5;
     
 }

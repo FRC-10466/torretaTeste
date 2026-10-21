@@ -6,12 +6,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class slimelight {
 
-private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight-back");
+    torretContantes contants = new torretContantes();
 
-private final double kp = 0.001;
-private final double ks = 0.03;
-private final double tolerancia = 2;
-private final double velocidade_max = 0.45;
+    private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight-back");
+
+    private final double kp = 0.001;
+    private final double ks = 0.03;
+    private final double tolerancia = 2;
+    private final double velocidade_max = 0.45;
 
 
     public double valor_ty() {
@@ -24,6 +26,12 @@ private final double velocidade_max = 0.45;
 
     public boolean temAlvo() {
         return tabela.getEntry("tv").getDouble(0) == 1;
+    }
+
+    public double distancia()  {
+        double a = (contants.ALTURA_APRITAG - contants.ALTURA_CAMERA);
+        double b = Math.tan(Math.toRadians(contants.ANGULO_CAMERA + valor_ty()));
+        return  a/b + contants.AJUSTE_DISTANCIA;
     }
 
     public double SeguirApril() {
