@@ -2,15 +2,19 @@ package frc.robot.subsystem.torret;
 
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
+import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+
 import com.revrobotics.PersistMode;
+
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import frc.robot.subsystem.limelight.slimelight;
+import frc.robot.subsystem.leds.torretLeds;
 
 
 public class Torret {
@@ -20,6 +24,8 @@ public class Torret {
 
     controller controle = new controller();
     slimelight limelight = new slimelight();
+    torretLeds led = new torretLeds();
+    torretContantes valor = new torretContantes();
 
     private final SparkMax motor_shooter = new SparkMax(6, MotorType.kBrushless);
     private final SparkMax motor_torret = new SparkMax(7, MotorType.kBrushless);
@@ -44,6 +50,18 @@ public class Torret {
     public void resetar() {
         controle.resetar();
     }
+    boolean voltou = false;
+    void voltarZero() {
+        if (voltou == false && encoder_torret.getPosition() <= 0.2) {
+            motor_torret.set(-0.05);
+        } voltou = true;
+    }
+
+    void proucurandoApriltag() {
+        if(voltou && encoder_torret.getPosition() >= 5.8) {
+            motor_torret.set(0.02);
+        }
+    }
 
     public void control() {
         SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
@@ -53,10 +71,23 @@ public class Torret {
         
         double speed_shooter = (controle.Velocidade_shooter());
         motor_shooter.set(speed_shooter);
+
+        boolean temAlvo = limelight.antiPiscada.calculate(limelight.temAlvo());
+
+        led.setarCor(limelight.temAlvo() ? led.VERDE : led.VERMELHO);
         
-        if (controle.botaoA() && limelight.temAlvo()) {
-            double velocidade_correcao = limelight.SeguirApril();
-            motor_torret.set(velocidade_correcao);
+        if (controle.botaoA()) {
+            if(temAlvo){
+                led.setarCor(led.VERDE);
+                motor_torret.set(limelight.corrigir());  
+            } else {
+                voltarZero();
+                proucurandoApriltag();
+            }
+        } 
+    
+         if (controle.botaoA() && temAlvo) {
+            motor_torret.set(limelight.corrigir());
         }else {
             double speed_torreta = (controle.Velocidade_torreta() * 0.08);
             motor_torret.set(speed_torreta);

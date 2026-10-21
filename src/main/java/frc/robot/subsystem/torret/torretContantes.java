@@ -7,5 +7,10 @@ public class torretContantes {
     public final double ANGULO_CAMERA = 3;//inclinação da limeliht
     public final double AJUSTE_DISTANCIA = 4;// diferença da limeliht com o shooter e da apriltag com o caixote
     
+    //---------------------------------------------------------------------------------------------------------
+    public final boolean VOLTANDO = false;
+    public final double VEL_VOLTAR = 0.5;
+    public final double VEL_PROUCURAR = 0.2;
+
     
 }
