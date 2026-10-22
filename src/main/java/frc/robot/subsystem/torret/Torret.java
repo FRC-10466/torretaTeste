@@ -9,8 +9,6 @@ import com.revrobotics.ResetMode;
 
 import com.revrobotics.PersistMode;
 
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.subsystem.limelight.slimelight;
@@ -22,7 +20,7 @@ public class Torret {
     RelativeEncoder shooter_encoder;
     RelativeEncoder encoder_torret;
 
-    controller controle = new controller();
+    Controller controle = new Controller();
     slimelight limelight = new slimelight();
     torretLeds led = new torretLeds();
     torretContantes valor = new torretContantes();
@@ -52,14 +50,18 @@ public class Torret {
     }
     boolean voltou = false;
     void voltarZero() {
-        if (voltou == false && encoder_torret.getPosition() <= 0.2) {
+        if (voltou == false && encoder_torret.getPosition() >= 0.2) {
             motor_torret.set(-0.05);
-        } voltou = true;
+        } else {
+            voltou = true;
+        }
     }
 
     void proucurandoApriltag() {
-        if(voltou && encoder_torret.getPosition() >= 5.8) {
+        if(voltou && encoder_torret.getPosition() <= 5.8) {
             motor_torret.set(0.02);
+        } else {
+            motor_torret.set(0);
         }
     }
 
@@ -80,15 +82,13 @@ public class Torret {
             if(temAlvo){
                 led.setarCor(led.VERDE);
                 motor_torret.set(limelight.corrigir());  
-            } else {
+            } else if (!voltou) {
                 voltarZero();
+            } else {
                 proucurandoApriltag();
             }
-        } 
-    
-         if (controle.botaoA() && temAlvo) {
-            motor_torret.set(limelight.corrigir());
         }else {
+            voltou = false;
             double speed_torreta = (controle.Velocidade_torreta() * 0.08);
             motor_torret.set(speed_torreta);
         }

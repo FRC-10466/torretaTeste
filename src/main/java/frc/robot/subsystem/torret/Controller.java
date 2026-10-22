@@ -3,7 +3,7 @@ package frc.robot.subsystem.torret;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class controller {
+public class Controller {
 
     private final XboxController xbox1 = new XboxController(0);
     public boolean ligado = false; 
