@@ -9,7 +9,7 @@ import frc.robot.subsystem.torret.torretContantes;
 
 public class slimelight {
 
-    public final Debouncer antiPiscada = new Debouncer(0.3,DebounceType.kFalling);
+    public final Debouncer antiPiscada = new Debouncer(0.5,DebounceType.kFalling);
 
     torretContantes contants = new torretContantes();
 

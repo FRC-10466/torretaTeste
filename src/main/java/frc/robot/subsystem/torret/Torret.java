@@ -51,15 +51,16 @@ public class Torret {
     boolean voltou = false;
     void voltarZero() {
         if (voltou == false && encoder_torret.getPosition() >= 0.2) {
-            motor_torret.set(-0.05);
+            motor_torret.set(-0.1);
         } else {
             voltou = true;
+            motor_torret.set(0);
         }
     }
 
     void proucurandoApriltag() {
         if(voltou && encoder_torret.getPosition() <= 5.8) {
-            motor_torret.set(0.02);
+            motor_torret.set(0.08);
         } else {
             motor_torret.set(0);
         }
@@ -80,6 +81,7 @@ public class Torret {
         
         if (controle.botaoA()) {
             if(temAlvo){
+                voltou = false;
                 led.setarCor(led.VERDE);
                 motor_torret.set(limelight.corrigir());  
             } else if (!voltou) {
