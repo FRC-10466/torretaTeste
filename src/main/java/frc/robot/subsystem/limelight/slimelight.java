@@ -5,13 +5,10 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.subsystem.torret.torretContantes;
 
 public class slimelight {
 
     public final Debouncer antiPiscada = new Debouncer(0.5,DebounceType.kFalling);
-
-    torretContantes contants = new torretContantes();
 
     private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight-back");
 
@@ -33,11 +30,6 @@ public class slimelight {
         return tabela.getEntry("tv").getDouble(0) == 1;
     }
 
-    public double distancia() {
-        double a = (contants.ALTURA_APRITAG - contants.ALTURA_CAMERA);
-        double b = Math.tan(Math.toRadians(contants.ANGULO_CAMERA + valor_ty()));
-        return  a/b + contants.AJUSTE_DISTANCIA;
-    }
 
     public double corrigir() {
         double velocidade_correcao = SeguirApril();

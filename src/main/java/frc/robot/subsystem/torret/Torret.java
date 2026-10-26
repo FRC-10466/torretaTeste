@@ -24,6 +24,7 @@ public class Torret {
     slimelight limelight = new slimelight();
     torretLeds led = new torretLeds();
     torretContantes valor = new torretContantes();
+    torretCalculos albert = new torretCalculos();
 
     private final SparkMax motor_shooter = new SparkMax(6, MotorType.kBrushless);
     private final SparkMax motor_torret = new SparkMax(7, MotorType.kBrushless);
@@ -79,11 +80,14 @@ public class Torret {
 
         led.setarCor(limelight.temAlvo() ? led.VERDE : led.VERMELHO);
         
-        if (controle.botaoA()) {
+        if (controle.gatilhoDireitoApertado()) {
             if(temAlvo){
                 voltou = false;
                 led.setarCor(led.VERDE);
-                motor_torret.set(limelight.corrigir());  
+                motor_torret.set(limelight.corrigir()); 
+                if (limelight.valor_tx() < 3) {
+                    motor_shooter.set(albert.RPMmotor());
+                } 
             } else if (!voltou) {
                 voltarZero();
             } else {
