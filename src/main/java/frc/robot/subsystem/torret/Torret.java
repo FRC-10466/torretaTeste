@@ -1,5 +1,6 @@
 package frc.robot.subsystem.torret;
 
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
@@ -9,6 +10,7 @@ import com.revrobotics.ResetMode;
 
 import com.revrobotics.PersistMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.subsystem.limelight.slimelight;
@@ -39,11 +41,23 @@ public class Torret {
         shooter_encoder = motor_shooter.getEncoder();
         encoder_torret = motor_torret.getEncoder();
 
+        shooter_config.closedLoop.pid(0, 0, 0);
+        shooter_config.closedLoop.feedForward.kV(12/5676);
+
         torret_config.softLimit.reverseSoftLimit(0.1).reverseSoftLimitEnabled(true).forwardSoftLimit(6).forwardSoftLimitEnabled(true);
 
         motor_torret.configure(torret_config, ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
         motor_shooter.configure(shooter_config,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+    }
+
+    double setRPM() {
+        double rpm_calculado = albert.RPMmotor() / 5676.0;
+        double erro = rpm_calculado - shooter_encoder.getVelocity();
+        double correcao_RPM = 0.005 * erro;
+        
+        rpm_calculado = MathUtil.clamp(correcao_RPM, 0, 1);
+        return rpm_calculado;
     }
 
     public void resetar() {
@@ -85,8 +99,8 @@ public class Torret {
                 voltou = false;
                 led.setarCor(led.VERDE);
                 motor_torret.set(limelight.corrigir()); 
-                if (limelight.valor_tx() < 3) {
-                    motor_shooter.set(albert.RPMmotor());
+                if (limelight.temAlvo() && Math.abs(limelight.valor_tx()) < 3) {
+                    motor_shooter.set(setRPM());
                 } 
             } else if (!voltou) {
                 voltarZero();

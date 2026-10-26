@@ -11,11 +11,6 @@ public class torretContantes {
     public final double RAIO_BOLA = 6;
     public final double ALTURA_DA_BOLA_AO_SAIR = 7;
     public final double ANGULO_QUE_A_BOLA_SAI = Math.toRadians(8);
-    public final double DIAMETRO_DA_RODA = 10;
-    
-    
-    
-
-
-    
+    public final double DIAMETRO_DA_RODA = 0.10;
+     
 }

@@ -8,9 +8,6 @@ public class Controller {
     private final XboxController xbox1 = new XboxController(0);
     public boolean ligado = false; 
 
-    double gatilhoDireito = xbox1.getRightTriggerAxis();
-    boolean apertado = false;
-
     double Velocidade_torreta() {
         return MathUtil.applyDeadband(xbox1.getLeftX(), 0.2);
     }
@@ -20,10 +17,8 @@ public class Controller {
     }
     
     boolean gatilhoDireitoApertado() {
-        if (gatilhoDireito < 0.2) {
-            apertado = true;
-        }
-        return apertado;
+        return xbox1.getRightTriggerAxis() > 0.2;
+
     }
 
     public void resetar() {
