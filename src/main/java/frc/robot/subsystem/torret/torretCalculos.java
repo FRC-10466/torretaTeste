@@ -19,11 +19,12 @@ public class torretCalculos {
 
     double velocidadeBola() {
         double g = 9.81;
-        double base = distancia() * Math.tan(contantes.ANGULO_QUE_A_BOLA_SAI) - deltaH();
-        if (base <= 0 || distancia() <= 0) {
-            return -1;
+        double d = distancia();
+        double base = d * Math.tan(contantes.ANGULO_QUE_A_BOLA_SAI) - deltaH();
+        if (base <= 0.01 || d <= 0) {
+            return Double.NaN;
         } double cossenoAngulo = Math.cos(contantes.ANGULO_QUE_A_BOLA_SAI);
-        return Math.sqrt(g * distancia() * distancia() / ( 2 * cossenoAngulo * cossenoAngulo * base));
+        return Math.sqrt(g * d * d / ( 2 * cossenoAngulo * cossenoAngulo * base));
     }
 
     double RPMmotor() {
