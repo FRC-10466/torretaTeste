@@ -9,6 +9,7 @@ public class torretLeds extends SubsystemBase {
 
     public final double VERMELHO = 0.61;
     public final double VERDE = 0.77;
+    public final double AMARELO = 0.67;
 
     public void setarCor(double cor) {
         blinkin.set(cor);

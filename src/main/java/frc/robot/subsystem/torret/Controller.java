@@ -18,7 +18,6 @@ public class Controller {
     
     boolean gatilhoDireitoApertado() {
         return xbox1.getRightTriggerAxis() > 0.2;
-
     }
 
     public void resetar() {

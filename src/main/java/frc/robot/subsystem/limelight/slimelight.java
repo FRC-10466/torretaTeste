@@ -14,7 +14,7 @@ public class slimelight {
 
     private final double kp = 0.003;
     private final double ks = 0.04;
-    private final double tolerancia = 3;
+    private final double tolerancia = 1.5;
     private final double velocidade_max = 0.45;
 
 

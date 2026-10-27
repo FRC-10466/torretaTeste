@@ -18,17 +18,16 @@ public class torretCalculos {
     }
 
     double velocidadeBola() {
-        double g = 9.81;
         double d = distancia();
         double base = d * Math.tan(contantes.ANGULO_QUE_A_BOLA_SAI) - deltaH();
         if (base <= 0.01 || d <= 0) {
             return Double.NaN;
         } double cossenoAngulo = Math.cos(contantes.ANGULO_QUE_A_BOLA_SAI);
-        return Math.sqrt(g * d * d / ( 2 * cossenoAngulo * cossenoAngulo * base));
+        return Math.sqrt(contantes.GRAVIDADE * d * d / ( 2 * cossenoAngulo * cossenoAngulo * base));
     }
 
     double RPMmotor() {
-        return (60 * velocidadeBola()) / (0.55 * Math.PI * contantes.DIAMETRO_DA_RODA);
+        return (60 * velocidadeBola()) / (contantes.EFICIENCIA_SHOOTER * Math.PI * contantes.DIAMETRO_DA_RODA);
     }
 
 }
