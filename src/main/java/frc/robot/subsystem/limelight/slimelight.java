@@ -12,9 +12,9 @@ public class slimelight {
 
     private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight-back");
 
-    private final double kp = 0.003;
+    private final double kp = 0.0035;
     private final double ks = 0.04;
-    private final double tolerancia = 1.5;
+    private final double tolerancia = 12;
     private final double velocidade_max = 0.45;
 
 

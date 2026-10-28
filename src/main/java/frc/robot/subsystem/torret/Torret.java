@@ -53,7 +53,7 @@ public class Torret {
         shooter_config.closedLoop.pid(constantes.SHOOTER_KP, 0, 0);
         shooter_config.closedLoop.feedForward.kV(constantes.SHOOTER_KV);
 
-        torret_config.softLimit.reverseSoftLimit(0.1).reverseSoftLimitEnabled(false).forwardSoftLimit(6).forwardSoftLimitEnabled(false);
+        torret_config.softLimit.reverseSoftLimit(1).reverseSoftLimitEnabled(true).forwardSoftLimit(130).forwardSoftLimitEnabled(true);
 
         motor_torret.configure(torret_config, ResetMode.kResetSafeParameters,PersistMode.kPersistParameters);
         motor_shooter.configure(shooter_config,ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -62,7 +62,7 @@ public class Torret {
 
     boolean voltou = false;
     void voltarZero() {
-        if (voltou == false && encoder_torret.getPosition() >= 0.2) {
+        if (voltou == false && encoder_torret.getPosition() >= 1) {
             motor_torret.set(-0.1);
         } else {
             voltou = true;
@@ -71,7 +71,7 @@ public class Torret {
     }
 
     void proucurandoApriltag() {
-        if(voltou && encoder_torret.getPosition() <= 5.8) {
+        if(voltou && encoder_torret.getPosition() <= 150) {
             motor_torret.set(0.08);
         } else {
             motor_torret.set(0);

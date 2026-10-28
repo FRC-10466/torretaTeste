@@ -17,10 +17,10 @@ public class Traction extends SubsystemBase{
     Controller controle = new Controller();
 
     private final SparkMax Rightfront = new SparkMax(4,MotorType.kBrushed);
-    private final SparkMax Leftfront = new SparkMax(2, MotorType.kBrushed);
+    private final SparkMax Leftfront = new SparkMax(11, MotorType.kBrushed);
 
-    public final SparkMax Rightback = new SparkMax(3,MotorType.kBrushed);
-    public final SparkMax Leftback = new SparkMax(1, MotorType.kBrushed);
+    public final SparkMax Rightback = new SparkMax(2,MotorType.kBrushed);
+    public final SparkMax Leftback = new SparkMax(10, MotorType.kBrushed);
 
     public final DifferentialDrive drive;
 

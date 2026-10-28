@@ -34,7 +34,7 @@ public class Controller {
     } 
     
     public double andarReto() {
-        return MathUtil.applyDeadband(xbox2.getLeftY(), 0.1);
+        return MathUtil.applyDeadband(-xbox2.getLeftY(), 0.1);
     }
 
     public double virar() {
