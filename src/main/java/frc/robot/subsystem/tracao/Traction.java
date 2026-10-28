@@ -5,11 +5,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystem.controler.Controller;
+
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
-import frc.robot.subsystem.torret.Controller;
 
 public class Traction extends SubsystemBase{
 

@@ -15,6 +15,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.subsystem.limelight.slimelight;
+import frc.robot.subsystem.controler.Controller;
 import frc.robot.subsystem.leds.torretLeds;
 
 
@@ -80,17 +81,24 @@ public class Torret {
     public void resetar() {
         controle.resetar();
         estavel.calculate(false);
+        ultimoRpm = 0;
     }
+
+    double ultimoRpm = 0;
 
     public void control() {
         boolean temAlvoReal = limelight.temAlvo();
         boolean temAlvo = limelight.antiPiscada.calculate(temAlvoReal);
         double tx = limelight.valor_tx();
         double rpmAlvo = albert.RPMmotor();
-        boolean rpmValido = temAlvo && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
+        boolean rpmValido = temAlvoReal && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
         boolean mirado = temAlvoReal && Math.abs(tx) < 3;
-        boolean velocidadeCerta = rpmValido && Math.abs(rpmAlvo - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
+        boolean velocidadeCerta = ultimoRpm > 0 && Math.abs(ultimoRpm - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
         boolean pronto = estavel.calculate(mirado && velocidadeCerta);
+
+        if (rpmValido) {
+            ultimoRpm = rpmAlvo;
+        }
 
         if (pronto) {
             led.setarCor(led.VERDE);
@@ -104,19 +112,22 @@ public class Torret {
             if(temAlvo){
                 voltou = false;
                 motor_torret.set(limelight.corrigir()); 
-                if (rpmValido) {
-                    shooterPID.setSetpoint(rpmAlvo, ControlType.kVelocity);
+                if (ultimoRpm > 0) {
+                    shooterPID.setSetpoint(ultimoRpm, ControlType.kVelocity);
                 } else {
                     motor_shooter.set(0);
                 }
             } else if (!voltou) {
+                ultimoRpm = 0;
                 motor_shooter.set(0);
                 voltarZero();
             } else {
+                ultimoRpm = 0;
                 motor_shooter.set(0);
                 proucurandoApriltag();
             }
         }else {
+            ultimoRpm = 0;
             voltou = false;
             double speed_torreta = (controle.Velocidade_torreta() * 0.08);
             motor_torret.set(speed_torreta);
@@ -131,5 +142,7 @@ public class Torret {
         SmartDashboard.putNumber("limite torreta", encoder_torret.getPosition());
         SmartDashboard.putNumber("rpmAtual", shooter_encoder.getVelocity());
         SmartDashboard.putBoolean("pronto", pronto);
+        SmartDashboard.putNumber("rpm alvo", ultimoRpm);
+        SmartDashboard.putNumber("distancia", albert.distancia());
     }   
 }
