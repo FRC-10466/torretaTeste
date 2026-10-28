@@ -6,10 +6,11 @@ import edu.wpi.first.wpilibj.XboxController;
 public class Controller {
 
     private final XboxController xbox1 = new XboxController(0);
+    private final XboxController xbox2 = new XboxController(1);
     public boolean ligado = false; 
 
     double Velocidade_torreta() {
-        return MathUtil.applyDeadband(xbox1.getLeftX(), 0.2);
+        return MathUtil.applyDeadband(xbox1.getRightX(), 0.2);
     }
 
     double Velocidade_shooter() {
@@ -30,7 +31,19 @@ public class Controller {
             ligado = !ligado;
         }
         return ligado;
-    }    
+    } 
+    
+    public double andarReto() {
+        return MathUtil.applyDeadband(xbox2.getLeftY(), 0.1);
+    }
+
+    public double virar() {
+        return MathUtil.applyDeadband(xbox2.getRightX(), 0.1);
+    }
+
+    public boolean turboApertado() {
+        return xbox2.getAButton();
+    }
     
 
 }

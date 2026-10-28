@@ -1,40 +1,46 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystem.torret.Torret;
+import frc.robot.subsystem.tracao.Traction;
 
 public class Robot extends TimedRobot {
 
-  Torret torret = new Torret();
+  private final Torret torret = new Torret();
+  private final Traction tracao = new Traction();
+  private final Timer timer = new Timer();
 
-  /** Called once at the beginning of the robot program. */
   public Robot() {}
 
-  /** This function is run once each time the robot enters autonomous mode. */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    timer.restart();
+  }
 
-  /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    if (timer.get() < 2) {
+      tracao.andarDireto(0.3);
+    } else {
+      tracao.StopTraction();
+    }
+  }
 
-  /** This function is called once each time the robot enters teleoperated mode. */
   @Override
   public void teleopInit() {
     torret.resetar();
   }
 
-  /** This function is called periodically during teleoperated mode. */
   @Override
   public void teleopPeriodic() {
     torret.control();
+    tracao.control();
   }
 
-  /** This function is called once each time the robot enters test mode. */
   @Override
   public void testInit() {}
 
-  /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {}
 }

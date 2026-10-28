@@ -83,17 +83,12 @@ public class Torret {
     }
 
     public void control() {
-        SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
-        SmartDashboard.putBoolean("auto ligado", controle.ligado);
-        SmartDashboard.putNumber("ty", limelight.valor_ty());
-        SmartDashboard.putNumber("tx", limelight.valor_tx());
-        SmartDashboard.putNumber("limite torreta", encoder_torret.getPosition());
-
-        boolean temAlvo = limelight.antiPiscada.calculate(limelight.temAlvo());
+        boolean temAlvoReal = limelight.temAlvo();
+        boolean temAlvo = limelight.antiPiscada.calculate(temAlvoReal);
         double tx = limelight.valor_tx();
         double rpmAlvo = albert.RPMmotor();
-        boolean rpmValido = limelight.temAlvo() && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
-        boolean mirado = limelight.temAlvo() && Math.abs(tx) < 3;
+        boolean rpmValido = temAlvo && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
+        boolean mirado = temAlvoReal && Math.abs(tx) < 3;
         boolean velocidadeCerta = rpmValido && Math.abs(rpmAlvo - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
         boolean pronto = estavel.calculate(mirado && velocidadeCerta);
 
@@ -128,6 +123,13 @@ public class Torret {
             double speed_shooter = (controle.Velocidade_shooter());
             motor_shooter.set(speed_shooter);
         }
-
-    }
+        
+        SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
+        SmartDashboard.putBoolean("auto ligado", controle.ligado);
+        SmartDashboard.putNumber("ty", limelight.valor_ty());
+        SmartDashboard.putNumber("tx", limelight.valor_tx());
+        SmartDashboard.putNumber("limite torreta", encoder_torret.getPosition());
+        SmartDashboard.putNumber("rpmAtual", shooter_encoder.getVelocity());
+        SmartDashboard.putBoolean("pronto", pronto);
+    }   
 }
