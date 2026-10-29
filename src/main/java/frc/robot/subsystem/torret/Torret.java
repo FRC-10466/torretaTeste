@@ -72,7 +72,7 @@ public class Torret {
     }
 
     void proucurandoApriltag() {
-        if(voltou && encoder_torret.getPosition() <= 150) {
+        if(voltou && encoder_torret.getPosition() <= 130) {
             motor_torret.set(0.08);
         } else {
             motor_torret.set(0);
@@ -93,7 +93,7 @@ public class Torret {
         double tx = limelight.valor_tx();
         double rpmAlvo = albert.RPMmotor();
         boolean rpmValido = temAlvoReal && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
-        boolean mirado = temAlvoReal && Math.abs(tx) < 5;
+        boolean mirado = temAlvoReal && Math.abs(tx) < 7;
         boolean velocidadeCerta = ultimoRpm > 0 && Math.abs(ultimoRpm - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
         boolean pronto = estavel.calculate(mirado && velocidadeCerta);
 
@@ -139,6 +139,7 @@ public class Torret {
         SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
         SmartDashboard.putNumber("ty", limelight.valor_ty());
         SmartDashboard.putNumber("tx", limelight.valor_tx());
+        SmartDashboard.putBoolean("auto ligado", controle.gatilhoDireitoApertado());
         SmartDashboard.putNumber("limite torreta", encoder_torret.getPosition());
         SmartDashboard.putNumber("rpmAtual", shooter_encoder.getVelocity());
         SmartDashboard.putBoolean("pronto", pronto);

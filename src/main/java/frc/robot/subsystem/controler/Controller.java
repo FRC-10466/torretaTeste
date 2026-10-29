@@ -7,8 +7,8 @@ public class Controller {
 
     private final XboxController xbox1 = new XboxController(0);
     private final XboxController xbox2 = new XboxController(1);
-    private boolean ligado1 = false; 
-    private boolean ligado2 = false;
+    boolean ligado1 = false; 
+    boolean ligado2 = false;
     boolean ultimoEstado2 = false;
 
     public double Velocidade_torreta() {

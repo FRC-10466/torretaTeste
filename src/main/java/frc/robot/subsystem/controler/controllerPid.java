@@ -8,6 +8,10 @@ public class controllerPid {
 
     private final testePID testePID = new testePID();
 
+    public void atualizar() {
+        testePID.atualizarSensor();
+    }
+
     public void controlPid() {
     if (xbox2.getHID().getPOV() == 0) {
         testePID.irPara(testePID.Laranja);

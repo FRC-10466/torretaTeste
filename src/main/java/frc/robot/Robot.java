@@ -16,6 +16,11 @@ public class Robot extends TimedRobot {
   public Robot() {}
 
   @Override
+  public void robotPeriodic() {
+    pid.atualizar();
+  }
+
+  @Override
   public void autonomousInit() {
     timer.restart();
   }
