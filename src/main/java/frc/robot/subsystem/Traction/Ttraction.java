@@ -1,4 +1,4 @@
-package frc.robot.subsystem.tracao;
+package frc.robot.subsystem.Traction;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,22 +11,22 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 import frc.robot.subsystem.torret.Controller;
 
-public class Traction extends SubsystemBase{
+public class Ttraction extends SubsystemBase{
 
     Controller controle = new Controller();
 
     private final SparkMax Rightfront = new SparkMax(4,MotorType.kBrushed);
-    private final SparkMax Leftfront = new SparkMax(2, MotorType.kBrushed);
+    private final SparkMax Leftfront = new SparkMax(11, MotorType.kBrushed);
 
-    public final SparkMax Rightback = new SparkMax(3,MotorType.kBrushed);
-    public final SparkMax Leftback = new SparkMax(1, MotorType.kBrushed);
+    public final SparkMax Rightback = new SparkMax(2,MotorType.kBrushed);
+    public final SparkMax Leftback = new SparkMax(10, MotorType.kBrushed);
 
     public final DifferentialDrive drive;
 
     private static final double VELOCIDADE_NORMAL = 0.7;
     private static final double VELOCIDADE_TURBO = 0.9;
 
-    public Traction() {
+    public Ttraction() {
         SparkMaxConfig RightConfig = new SparkMaxConfig ();
         SparkMaxConfig LeftConfig = new SparkMaxConfig();
 
@@ -69,11 +69,17 @@ public class Traction extends SubsystemBase{
     }
 
     public void control() {
-    boolean turbo = controle.turboApertado();
+    boolean turbo = controle.turboLigado();
     SmartDashboard.putBoolean("turbo", turbo);
+    SmartDashboard.putBoolean("A pressionado", controle.xbox2.getAButton());
 
     setTurbo(turbo);
     arcadeDrive(controle.andarReto(), controle.virar());
+  }
+
+  public void resetar(){
+    controle.turboDesligado();
+
   }
 
 }

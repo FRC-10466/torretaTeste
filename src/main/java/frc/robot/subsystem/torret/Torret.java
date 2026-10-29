@@ -15,7 +15,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.subsystem.limelight.slimelight;
-import frc.robot.subsystem.leds.torretLeds;
+import frc.robot.subsystem.leds.Leds;
 
 
 public class Torret {
@@ -25,8 +25,8 @@ public class Torret {
 
     Controller controle = new Controller();
     slimelight limelight = new slimelight();
-    torretLeds led = new torretLeds();
-    torretContantes constantes = new torretContantes();
+    Leds led = new Leds();
+    Contantss constantes = new Contantss();
     torretCalculos albert = new torretCalculos();
 
     private final SparkMax motor_shooter = new SparkMax(6, MotorType.kBrushless);
@@ -91,6 +91,8 @@ public class Torret {
         boolean mirado = temAlvoReal && Math.abs(tx) < 3;
         boolean velocidadeCerta = rpmValido && Math.abs(rpmAlvo - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
         boolean pronto = estavel.calculate(mirado && velocidadeCerta);
+        
+        led.setPiscando(controle.turboEstaLigado());
 
         if (pronto) {
             led.setarCor(led.VERDE);
@@ -99,6 +101,7 @@ public class Torret {
         } else {
             led.setarCor(led.VERMELHO);
         }
+
         
         if (controle.gatilhoDireitoApertado()) {
             if(temAlvo){

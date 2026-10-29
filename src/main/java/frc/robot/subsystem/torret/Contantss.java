@@ -1,6 +1,6 @@
 package frc.robot.subsystem.torret;
 
-public class torretContantes {
+public class Contantss {
 
     public final double ALTURA_APRITAG = 0.94;//centra do qrcode
     public final double ALTURA_CAMERA = 2;//altura da limelight
@@ -12,6 +12,11 @@ public class torretContantes {
     public final double ANGULO_QUE_A_BOLA_SAI = Math.toRadians(8);
     public final double DIAMETRO_DA_RODA = 0.10;
     public final double EFICIENCIA_SHOOTER = 0.55;
+
+    public final double kp = 0.003;
+    public final double ks = 0.04;
+    public final double tolerancia = 1.5;
+    public final double velocidade_max = 0.45;
     
     public final double GRAVIDADE = 9.81;
     

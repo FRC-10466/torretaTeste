@@ -5,7 +5,7 @@ import frc.robot.subsystem.limelight.slimelight;
 public class torretCalculos {
 
     slimelight limelight = new slimelight();
-    torretContantes contantes = new torretContantes();
+    Contantss contantes = new Contantss();
 
     double distancia() {
         double a = (contantes.ALTURA_APRITAG - contantes.ALTURA_CAMERA);

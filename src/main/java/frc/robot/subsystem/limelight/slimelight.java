@@ -5,19 +5,16 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.subsystem.torret.Contantss;
 
 public class slimelight {
 
     public final Debouncer antiPiscada = new Debouncer(0.5,DebounceType.kFalling);
 
     private NetworkTable tabela = NetworkTableInstance.getDefault().getTable("limelight-back");
+     Contantss contantes = new Contantss();
 
-    private final double kp = 0.003;
-    private final double ks = 0.04;
-    private final double tolerancia = 1.5;
-    private final double velocidade_max = 0.45;
-
-
+    
     public double valor_ty() {
         return tabela.getEntry("ty").getDouble(0);
     }
@@ -39,13 +36,13 @@ public class slimelight {
     public double SeguirApril() {
         double tx = tabela.getEntry("tx").getDouble(0);
 
-        if(!temAlvo() || Math.abs(tx) < tolerancia) {
+        if(!temAlvo() || Math.abs(tx) < contantes.tolerancia) {
             return 0.0;
         }
 
-        final double correcao = kp * tx + Math.copySign(ks,tx);
+        final double correcao = contantes.kp * tx + Math.copySign(contantes.ks,tx);
 
-        return MathUtil.clamp(correcao, -velocidade_max, velocidade_max);
+        return MathUtil.clamp(correcao, -contantes.velocidade_max, contantes.velocidade_max);
         
     }
 }
