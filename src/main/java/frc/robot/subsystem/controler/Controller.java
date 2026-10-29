@@ -7,10 +7,12 @@ public class Controller {
 
     private final XboxController xbox1 = new XboxController(0);
     private final XboxController xbox2 = new XboxController(1);
-    public boolean ligado = false; 
+    private boolean ligado1 = false; 
+    private boolean ligado2 = false;
+    boolean ultimoEstado2 = false;
 
     public double Velocidade_torreta() {
-        return MathUtil.applyDeadband(xbox1.getRightX(), 0.2);
+        return MathUtil.applyDeadband(xbox1.getLeftX(), 0.2);
     }
 
     public double Velocidade_shooter() {
@@ -18,19 +20,25 @@ public class Controller {
     }
     
     public boolean gatilhoDireitoApertado() {
-        return xbox1.getRightTriggerAxis() > 0.2;
+        boolean a = xbox1.getRightTriggerAxis() > 0.2;
+        if (a && !ultimoEstado2) {
+            ligado2 = !ligado2;
+        }
+        ultimoEstado2 = a;
+        return ligado2;
     }
 
     public void resetar() {
-        ligado = false;
+        ligado1 = false;
+        ligado2 = false;
         xbox1.getAButtonPressed();
     }
 
     public boolean botaoA () {
         if (xbox1.getAButtonPressed()) {
-            ligado = !ligado;
+            ligado1 = !ligado1;
         }
-        return ligado;
+        return ligado1;
     } 
     
     public double andarReto() {

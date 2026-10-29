@@ -4,11 +4,13 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystem.torret.Torret;
 import frc.robot.subsystem.tracao.Traction;
+import frc.robot.subsystem.controler.controllerPid;
 
 public class Robot extends TimedRobot {
 
   private final Torret torret = new Torret();
   private final Traction tracao = new Traction();
+  private final controllerPid pid = new controllerPid();
   private final Timer timer = new Timer();
 
   public Robot() {}
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     torret.control();
     tracao.control();
+    pid.controlPid();
   }
 
   @Override

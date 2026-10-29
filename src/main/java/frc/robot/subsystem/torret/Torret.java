@@ -12,6 +12,7 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 
 import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.subsystem.limelight.slimelight;
@@ -35,7 +36,7 @@ public class Torret {
 
     private final SparkClosedLoopController shooterPID = motor_shooter.getClosedLoopController();
 
-    private final Debouncer estavel = new Debouncer(0.1);
+    private final Debouncer estavel = new Debouncer(0.2, DebounceType.kBoth);
 
     private final SparkMaxConfig shooter_config = new SparkMaxConfig();
     private final SparkMaxConfig torret_config = new SparkMaxConfig();
@@ -92,7 +93,7 @@ public class Torret {
         double tx = limelight.valor_tx();
         double rpmAlvo = albert.RPMmotor();
         boolean rpmValido = temAlvoReal && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
-        boolean mirado = temAlvoReal && Math.abs(tx) < 3;
+        boolean mirado = temAlvoReal && Math.abs(tx) < 5;
         boolean velocidadeCerta = ultimoRpm > 0 && Math.abs(ultimoRpm - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
         boolean pronto = estavel.calculate(mirado && velocidadeCerta);
 
@@ -136,7 +137,6 @@ public class Torret {
         }
         
         SmartDashboard.putBoolean("tem alvo", limelight.temAlvo());
-        SmartDashboard.putBoolean("auto ligado", controle.ligado);
         SmartDashboard.putNumber("ty", limelight.valor_ty());
         SmartDashboard.putNumber("tx", limelight.valor_tx());
         SmartDashboard.putNumber("limite torreta", encoder_torret.getPosition());
