@@ -1,5 +1,4 @@
 package frc.robot.subsystem.testePid;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -27,7 +26,7 @@ public class testePID {
     //Malha interna
     private final PIDController PidAngulo = new PIDController(0.5, 0, 0);
     //Malhar externa
-    private final PIDController PidPosicao = new PIDController(0.007, 0, 0, 0.1);
+    private final PIDController PidPosicao = new PIDController(0.007, 0, 0);
 
     private final double Reducao = 5.0; 
     private final double PotenciaMax = 0.10;
@@ -40,6 +39,7 @@ public class testePID {
     private double distanciaCm = 0;
     private boolean sensorValido = false;
     private double anguloAlvo = 0;
+    private double kG = 0.0;
     
 
     public final double Laranja = 2.25;
@@ -61,6 +61,7 @@ public class testePID {
 
     SmartDashboard.putData("PID/angulo", PidAngulo);   
     SmartDashboard.putData("PID/posicao", PidPosicao);
+    SmartDashboard.putNumber("PID/kG", kG);
     }
 
     
@@ -78,7 +79,8 @@ public class testePID {
     }
 
     public void segurarAngulo(double alvoRot){
-        double potencia = MathUtil.clamp(PidAngulo.calculate(encoder.getPosition(), alvoRot), -PotenciaMax, PotenciaMax);
+        kG = SmartDashboard.getNumber("PID/kG", kG);
+        double potencia = MathUtil.clamp(PidAngulo.calculate(encoder.getPosition(), alvoRot) + kG, -PotenciaMax, PotenciaMax);
         motor.set(potencia);
 
         SmartDashboard.putNumber("PID/angulo_alvo", alvoRot);
@@ -107,7 +109,7 @@ public class testePID {
         PidAngulo.reset();
         PidPosicao.reset();
         anguloAlvo = 0;
-        motor.set(0);
+        segurarAngulo(0);
     }
 
 }
