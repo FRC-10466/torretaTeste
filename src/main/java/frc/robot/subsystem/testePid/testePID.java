@@ -12,12 +12,13 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 
 
 
 public class testePID {
-    private final Ultrasonic sensor = new Ultrasonic(0, 1);
+    private final AnalogInput sensor = new AnalogInput(0);
     private final SparkMax motor = new SparkMax(3, MotorType.kBrushless);
     private final RelativeEncoder encoder = motor.getEncoder();
     private final MedianFilter mediana = new MedianFilter(5);
@@ -33,10 +34,11 @@ public class testePID {
     private final double LimiteRotacoes = 0.095;
     private final double LimiteAngulo = 10.0 / 360.0 * Reducao;
 
+    private final double DistanciaMin = 10.0;
+    private final double DistanciaMax = 45.0;
 
     private double distanciaCm = 0;
-    private double ultimaLeitura = -1;
-    private boolean leituraNova = false;
+    private boolean sensorValido = false;
     private double anguloAlvo = 0;
     
 
@@ -48,7 +50,7 @@ public class testePID {
     public final double AzulClaro = 24.75;
 
     public testePID() {
-    Ultrasonic.setAutomaticMode(true);
+    
 
     config.smartCurrentLimit(15).idleMode(IdleMode.kBrake).inverted(false);
     config.softLimit.forwardSoftLimit(LimiteRotacoes).forwardSoftLimitEnabled(true);
@@ -63,16 +65,16 @@ public class testePID {
 
     
     public void atualizarSensor() {
-        double leitura = sensor.getRangeMM() / 10.0;
-        if (sensor.isRangeValid() && leitura != ultimaLeitura) {
-            distanciaCm = mediana.calculate(leitura); // só entra no filtro quando o sensor mediu de novo
-            ultimaLeitura = leitura;
-            leituraNova = true;
-            System.out.println(leitura);
-        }
-        SmartDashboard.putBoolean("PID/sensor_valido", sensor.isRangeValid());
-        SmartDashboard.putNumber("PID/distancia_cm", distanciaCm);
-        SmartDashboard.putNumber("PID/encoder_rot", encoder.getPosition());
+        double tensao = sensor.getAverageVoltage();
+        double leituraCm = 27.86 * Math.pow(tensao, -1.15);
+        
+        distanciaCm = mediana.calculate(leituraCm);
+        sensorValido = distanciaCm >= DistanciaMin && distanciaCm <= DistanciaMax;
+
+        SmartDashboard.putBoolean("TPID/sensor_valido", sensorValido);
+        SmartDashboard.putNumber("TPID/distancia_cm", distanciaCm);
+        SmartDashboard.putNumber("TPID/encoder_rot", encoder.getPosition());
+        SmartDashboard.putNumber("TPID/angulo_graus", encoder.getPosition() * 360.0 / Reducao);
     }
 
     public void segurarAngulo(double alvoRot){
@@ -87,15 +89,12 @@ public class testePID {
     
     
     public void irPara(double alvo) {
-        if (!sensor.isRangeValid()) {
+        if (!sensorValido) {
             parar();
             return;
         }
         
-        if(leituraNova){
-            anguloAlvo = MathUtil.clamp(PidPosicao.calculate(distanciaCm, alvo), -LimiteAngulo, LimiteAngulo);
-            leituraNova = false;
-        }
+        anguloAlvo = MathUtil.clamp(PidPosicao.calculate(distanciaCm, alvo), -LimiteAngulo, LimiteAngulo);
 
         segurarAngulo(anguloAlvo);
         
@@ -109,7 +108,6 @@ public class testePID {
         PidPosicao.reset();
         anguloAlvo = 0;
         motor.set(0);
-        SmartDashboard.putNumber("PID/potencia", 0);
     }
 
 }
