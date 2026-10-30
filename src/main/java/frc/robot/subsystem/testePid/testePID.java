@@ -1,5 +1,4 @@
 package frc.robot.subsystem.testePid;
-import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -12,13 +11,14 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.ResetMode;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import edu.wpi.first.wpilibj.AnalogInput;
 
 
 
 
 public class testePID {
     private final Ultrasonic sensor = new Ultrasonic(0, 1);
-    private final SparkMax motor = new SparkMax(41, MotorType.kBrushless);
+    private final SparkMax motor = new SparkMax(3, MotorType.kBrushless);
     private final RelativeEncoder encoder = motor.getEncoder();
     private final MedianFilter mediana = new MedianFilter(5);
     private final SparkMaxConfig config = new SparkMaxConfig();
@@ -26,18 +26,20 @@ public class testePID {
     //Malha interna
     private final PIDController PidAngulo = new PIDController(0.5, 0, 0);
     //Malhar externa
-    private final PIDController PidPosicao = new PIDController(0.007, 0, 0, 0.1);
+    private final PIDController PidPosicao = new PIDController(0.007, 0, 0);
 
     private final double Reducao = 5.0; 
     private final double PotenciaMax = 0.10;
     private final double LimiteRotacoes = 0.095;
     private final double LimiteAngulo = 10.0 / 360.0 * Reducao;
 
+    private final double DistanciaMin = 10.0;
+    private final double DistanciaMax = 45.0;
 
     private double distanciaCm = 0;
-    private double ultimaLeitura = -1;
-    private boolean leituraNova = false;
+    private boolean sensorValido = false;
     private double anguloAlvo = 0;
+    private double kG = 0.0;
     
 
     public final double Laranja = 2.25;
@@ -48,7 +50,7 @@ public class testePID {
     public final double AzulClaro = 24.75;
 
     public testePID() {
-    Ultrasonic.setAutomaticMode(true);
+    
 
     config.smartCurrentLimit(15).idleMode(IdleMode.kBrake).inverted(false);
     config.softLimit.forwardSoftLimit(LimiteRotacoes).forwardSoftLimitEnabled(true);
@@ -59,6 +61,7 @@ public class testePID {
 
     SmartDashboard.putData("PID/angulo", PidAngulo);   
     SmartDashboard.putData("PID/posicao", PidPosicao);
+    SmartDashboard.putNumber("PID/kG", kG);
     }
 
     
@@ -71,12 +74,13 @@ public class testePID {
             System.out.println(leitura);
         }
         SmartDashboard.putBoolean("PID/sensor_valido", sensor.isRangeValid());
-        SmartDashboard.putNumber("Distancia_Cm_", distanciaCm);
+        SmartDashboard.putNumber("PID/distancia_cm", distanciaCm);
         SmartDashboard.putNumber("PID/encoder_rot", encoder.getPosition());
     }
 
     public void segurarAngulo(double alvoRot){
-        double potencia = MathUtil.clamp(PidAngulo.calculate(encoder.getPosition(), alvoRot), -PotenciaMax, PotenciaMax);
+        kG = SmartDashboard.getNumber("PID/kG", kG);
+        double potencia = MathUtil.clamp(PidAngulo.calculate(encoder.getPosition(), alvoRot) + kG, -PotenciaMax, PotenciaMax);
         motor.set(potencia);
 
         SmartDashboard.putNumber("PID/angulo_alvo", alvoRot);
@@ -87,15 +91,12 @@ public class testePID {
     
     
     public void irPara(double alvo) {
-        if (!sensor.isRangeValid()) {
+        if (!sensorValido) {
             parar();
             return;
         }
         
-        if(leituraNova){
-            anguloAlvo = MathUtil.clamp(PidPosicao.calculate(distanciaCm, alvo), -LimiteAngulo, LimiteAngulo);
-            leituraNova = false;
-        }
+        anguloAlvo = MathUtil.clamp(PidPosicao.calculate(distanciaCm, alvo), -LimiteAngulo, LimiteAngulo);
 
         segurarAngulo(anguloAlvo);
         
@@ -108,8 +109,7 @@ public class testePID {
         PidAngulo.reset();
         PidPosicao.reset();
         anguloAlvo = 0;
-        motor.set(0);
-        SmartDashboard.putNumber("PID/potencia", 0);
+        segurarAngulo(0);
     }
 
 }
