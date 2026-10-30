@@ -11,7 +11,7 @@ public class torretContantes {
     public final double ALTURA_DA_BOLA_AO_SAIR = 0.55;
     public final double ANGULO_QUE_A_BOLA_SAI = Math.toRadians(65);
     public final double DIAMETRO_DA_RODA = 0.10;
-    public final double EFICIENCIA_SHOOTER = 0.48;
+    public final double EFICIENCIA_SHOOTER = 0.47;
     
     public final double GRAVIDADE = 9.81;
     

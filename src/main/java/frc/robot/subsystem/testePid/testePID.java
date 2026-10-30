@@ -18,7 +18,7 @@ import com.revrobotics.RelativeEncoder;
 
 public class testePID {
     private final Ultrasonic sensor = new Ultrasonic(0, 1);
-    private final SparkMax motor = new SparkMax(3, MotorType.kBrushless);
+    private final SparkMax motor = new SparkMax(41, MotorType.kBrushless);
     private final RelativeEncoder encoder = motor.getEncoder();
     private final MedianFilter mediana = new MedianFilter(5);
     private final SparkMaxConfig config = new SparkMaxConfig();
@@ -71,7 +71,7 @@ public class testePID {
             System.out.println(leitura);
         }
         SmartDashboard.putBoolean("PID/sensor_valido", sensor.isRangeValid());
-        SmartDashboard.putNumber("PID/distancia_cm", distanciaCm);
+        SmartDashboard.putNumber("Distancia_Cm_", distanciaCm);
         SmartDashboard.putNumber("PID/encoder_rot", encoder.getPosition());
     }
 

@@ -93,7 +93,7 @@ public class Torret {
         double tx = limelight.valor_tx();
         double rpmAlvo = albert.RPMmotor();
         boolean rpmValido = temAlvoReal && Double.isFinite(rpmAlvo) && rpmAlvo > 0 && rpmAlvo < constantes.RPM_MAXIMO;
-        boolean mirado = temAlvoReal && Math.abs(tx) < 7;
+        boolean mirado = temAlvoReal && Math.abs(tx) < 5;
         boolean velocidadeCerta = ultimoRpm > 0 && Math.abs(ultimoRpm - shooter_encoder.getVelocity()) < constantes.TOLERANCIA_RPM;
         boolean pronto = estavel.calculate(mirado && velocidadeCerta);
 
